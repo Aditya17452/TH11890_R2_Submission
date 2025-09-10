@@ -1,0 +1,10 @@
+Flask==2.3.3
+Flask-CORS==4.0.0
+opencv-python==4.8.1.78
+numpy==1.24.3
+Pillow==9.5.0
+torch==2.2.0
+torchvision==0.15.1
+transformers==4.37.2
+diffusers==0.26.4
+scipy==1.11.1
