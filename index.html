@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ujjain Kumbh Crowd Management Simulator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Smart Crowd Flow Management System Popup -->
+<div id="crowd-popup" class="crowd-popup">
+    <div class="popup-content">
+        <div class="popup-header">
+            <h1>🌊 Smart Crowd Flow Management System</h1>
+            <span class="close-btn" id="close-crowd-popup">&times;</span>
+        </div>
+        <div class="popup-body">
+            <h3 class="subheading">Networked Gate Intelligence for Mass Gathering Safety</h3>
+            
+            <div class="content-section">
+                <p>"Our intelligent system protects sacred spaces and large venues by automatically managing crowd flow through strategically placed gates."</p>
+                
+                <div class="core-logic">
+                    <h4>Core Protection Logic:</h4>
+                    <p>When any area occupancy exceeds safety thresholds, our system:</p>
+                    <ul>
+                        <li>• Automatically regulates gate access to prevent dangerous overcrowding</li>
+                        <li>• Maintains safe crowd density until clearance is achieved</li>
+                        <li>• Provides real-time visual monitoring of all entry points</li>
+                        <li>• Creates dynamic safety buffers across interconnected gates</li>
+                    </ul>
+                </div>
+                
+                <p class="sanskrit">"सुरक्षित प्रवाह, सुरक्षित लोग"<br>(Safe flow, safe people!)</p>
+                
+                <p>Each gate can be connected to live cameras (webcam/mobile/CCTV) for real-time crowd assessment and automated threshold management across any venue type.</p>
+            </div>
+            
+            <div class="setup-guide">
+                <h4>Setup Guide</h4>
+                <ol>
+                    <li>Select any gate on the network map</li>
+                    <li>Connect camera source (webcam/mobile/CCTV)</li>
+                    <li>Monitor real-time counts and status indicators</li>
+                    <li>Watch automatic gate control when thresholds are exceeded</li>
+                </ol>
+            </div>
+            
+            <div class="key-features">
+                <h4>Key Features</h4>
+                <div class="features-grid">
+                    <div class="feature-item">⚡ Automatic threshold-based access control</div>
+                    <div class="feature-item">📹 Multiple camera integration options</div>
+                    <div class="feature-item">🎯 Real-time crowd density monitoring</div>
+                    <div class="feature-item">🔄 Intelligent flow redistribution across gate networks</div>
+                    <div class="feature-item">🚨 Visual alert system for emergency response</div>
+                </div>
+            </div>
+            
+            <div class="closing-statement">
+                <p>"Transforming crowd safety through intelligent gate networking and real-time monitoring."</p>
+            </div>
+        </div>
+        <div class="popup-footer">
+            <button id="start-system-btn" class="start-system-btn">
+                <i class="fas fa-play-circle"></i> Launch System
+            </button>
+        </div>
+    </div>
+</div>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <h1>TEAM SAKSHAM</h1>
+            <h3>Ujjain Kumbh Crowd Management System</h3>
+            <p>Smart crowd monitoring and alert system for Kumbh Mela</p>
+        </div>
+    </header>
+    
+    <div class="dashboard">
+        <div class="network-view">
+            <h2>Crowd Network Monitoring with Temple Center</h2>
+            <svg width="100%" height="500" viewBox="0 0 800 500" id="networkMap">
+                <!-- Temple at the center -->
+                <rect x="375" y="225" width="100" height="100" rx="10" class="temple" />
+                <text x="425" y="280" class="temple-label" text-anchor="middle">Temple</text>
+                
+                <!-- Connections between gates -->
+                <!-- Only two gates connected to temple -->
+                <line x1="425" y1="225" x2="425" y2="125" class="connection" />
+                <line x1="425" y1="325" x2="425" y2="425" class="connection" />
+                
+                <!-- Connections between other gates (graph network) -->
+                <line x1="225" y1="125" x2="425" y2="125" class="connection-dotted" />
+                <line x1="625" y1="125" x2="425" y2="125" class="connection-dotted" />
+                <line x1="225" y1="125" x2="225" y2="325" class="connection" />
+                <line x1="625" y1="125" x2="625" y2="325" class="connection" />
+                <line x1="225" y1="325" x2="425" y2="425" class="connection-dotted" />
+                <line x1="625" y1="325" x2="425" y2="425" class="connection-dotted" />
+                <line x1="225" y1="325" x2="625" y2="325" class="connection" />
+                
+                <!-- Gates -->
+                <!-- Only two gates connected to temple -->
+                <g id="gateA">
+                    <circle cx="425" cy="125" r="40" class="gate" data-gate="A" />
+                    <text x="425" y="125" class="gate-label" text-anchor="middle">Gate A</text>
+                    <text x="425" y="145" class="gate-info" text-anchor="middle">Capacity: 200</text>
+                    <foreignObject x="395" y="155" width="60" height="40">
+                        <div xmlns="http://www.w3.org/1999/xhtml" class="camera-controls">
+                            <select class="camera-select" data-gate="A" onchange="handleCameraSelect(this)">
+                                <option value="">Select Source</option>
+                                <option value="0">Webcam 0</option>
+                                <option value="1">Webcam 1</option>
+                                <option value="2">Webcam 2</option>
+                                <option value="url">CCTV URL</option>
+                                <option value="mobile">Mobile Camera</option>
+                            </select>
+                        </div>
+                    </foreignObject>
+                </g>
+                
+                <g id="gateF">
+                    <circle cx="425" cy="425" r="40" class="gate" data-gate="F" />
+                    <text x="425" y="425" class="gate-label" text-anchor="middle">Gate F</text>
+                    <text x="425" y="445" class="gate-info" text-anchor="middle">Capacity: 400</text>
+                    <foreignObject x="395" y="455" width="60" height="40">
+                        <div xmlns="http://www.w3.org/1999/xhtml" class="camera-controls">
+                            <select class="camera-select" data-gate="F" onchange="handleCameraSelect(this)">
+                                <option value="">Select Source</option>
+                                <option value="0">Webcam 0</option>
+                                <option value="1">Webcam 1</option>
+                                <option value="2">Webcam 2</option>
+                                <option value="url">CCTV URL</option>
+                                <option value="mobile">Mobile Camera</option>
+                            </select>
+                        </div>
+                    </foreignObject>
+                </g>
+                
+                <!-- Other gates in the network -->
+                <g id="gateB">
+                    <circle cx="225" cy="125" r="40" class="gate" data-gate="B" />
+                    <text x="225" y="125" class="gate-label" text-anchor="middle">Gate B</text>
+                    <text x="225" y="145" class="gate-info" text-anchor="middle">Capacity: 300</text>
+                    <foreignObject x="195" y="155" width="60" height="40">
+                        <div xmlns="http://www.w3.org/1999/xhtml" class="camera-controls">
+                            <select class="camera-select" data-gate="B" onchange="handleCameraSelect(this)">
+                                <option value="">Select Source</option>
+                                <option value="0">Webcam 0</option>
+                                <option value="1">Webcam 1</option>
+                                <option value="2">Webcam 2</option>
+                                <option value="url">CCTV URL</option>
+                                <option value="mobile">Mobile Camera</option>
+                            </select>
+                        </div>
+                    </foreignObject>
+                </g>
+                
+                <g id="gateC">
+                    <circle cx="625" cy="125" r="40" class="gate" data-gate="C" />
+                    <text x="625" y="125" class="gate-label" text-anchor="middle">Gate C</text>
+                    <text x="625" y="145" class="gate-info" text-anchor="middle">Capacity: 250</text>
+                    <foreignObject x="595" y="155" width="60" height="40">
+                        <div xmlns="http://www.w3.org/1999/xhtml" class="camera-controls">
+                            <select class="camera-select" data-gate="C" onchange="handleCameraSelect(this)">
+                                <option value="">Select Source</option>
+                                <option value="0">Webcam 0</option>
+                                <option value="1">Webcam 1</option>
+                                <option value="2">Webcam 2</option>
+                                <option value="url">CCTV URL</option>
+                                <option value="mobile">Mobile Camera</option>
+                            </select>
+                        </div>
+                    </foreignObject>
+                </g>
+                
+                <g id="gateD">
+                    <circle cx="225" cy="325" r="40" class="gate" data-gate="D" />
+                    <text x="225" y="325" class="gate-label" text-anchor="middle">Gate D</text>
+                    <text x="225" y="345" class="gate-info" text-anchor="middle">Capacity: 350</text>
+                    <foreignObject x="195" y="355" width="60" height="40">
+                        <div xmlns="http://www.w3.org/1999/xhtml" class="camera-controls">
+                            <select class="camera-select" data-gate="D" onchange="handleCameraSelect(this)">
+                                <option value="">Select Source</option>
+                                <option value="0">Webcam 0</option>
+                                <option value="1">Webcam 1</option>
+                                <option value="2">Webcam 2</option>
+                                <option value="url">CCTV URL</option>
+                                <option value="mobile">Mobile Camera</option>
+                            </select>
+                        </div>
+                    </foreignObject>
+                </g>
+                
+                <g id="gateE">
+                    <circle cx="625" cy="325" r="40" class="gate" data-gate="E" />
+                    <text x="625" y="325" class="gate-label" text-anchor="middle">Gate E</text>
+                    <text x="625" y="345" class="gate-info" text-anchor="middle">Capacity: 300</text>
+                    <foreignObject x="595" y="355" width="60" height="40">
+                        <div xmlns="http://www.w3.org/1999/xhtml" class="camera-controls">
+                            <select class="camera-select" data-gate="E" onchange="handleCameraSelect(this)">
+                                <option value="">Select Source</option>
+                                <option value="0">Webcam 0</option>
+                                <option value="1">Webcam 1</option>
+                                <option value="2">Webcam 2</option>
+                                <option value="url">CCTV URL</option>
+                                <option value="mobile">Mobile Camera</option>
+                            </select>
+                        </div>
+                    </foreignObject>
+                </g>
+            </svg>
+            <!-- Safety Message Section -->
+
+            <!-- Smart Gate Threshold System Section -->
+<section class="capacity-system">
+    <div class="container">
+        <div class="system-header">
+            <h2>🏛 Temple Capacity Management System</h2>
+            <p class="system-subtitle">Intelligent crowd control through distributed gate monitoring</p>
+        </div>
+
+        <div class="capacity-grid">
+            <!-- Total Capacity Card -->
+            <div class="capacity-card total-capacity">
+                <h3>Total Capacity Calculation:</h3>
+                <div class="calculation-formula">
+                    Temple Capacity (1000) = Gate A (200) + Gate B (300) + Gate C (250) + Gate D (350) + Gate E (300) + Gate F (400)
+                </div>
+            </div>
+
+            <!-- How It Works Card -->
+            <div class="capacity-card">
+                <h3>How Our System Works:</h3>
+                <ul class="system-features">
+                    <li><i class="fas fa-check-circle"></i> Individual Gate Monitoring: Each gate has its own capacity limit</li>
+                    <li><i class="fas fa-check-circle"></i> Total Temple Protection: Combined gates protect total temple capacity of 1000 people</li>
+                    <li><i class="fas fa-check-circle"></i> Independent Threshold Control: If ANY single gate exceeds 80% capacity, it triggers alerts</li>
+                    <li><i class="fas fa-check-circle"></i> Authority Notification: System alerts authorities when thresholds breached</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Alert System -->
+        <div class="alert-system">
+            <h3>Alert System:</h3>
+            <div class="alert-levels">
+                <div class="alert-level">
+                    <div class="alert-indicator green"></div>
+                    <div class="alert-content">
+                        <h4>🟢 Normal</h4>
+                        <p>All gates below 80% capacity</p>
+                    </div>
+                </div>
+                <div class="alert-level">
+                    <div class="alert-indicator yellow"></div>
+                    <div class="alert-content">
+                        <h4>🟡 Warning</h4>
+                        <p>Any gate at 80-100% capacity</p>
+                    </div>
+                </div>
+                <div class="alert-level">
+                    <div class="alert-indicator red"></div>
+                    <div class="alert-content">
+                        <h4>🔴 Critical</h4>
+                        <p>Any gate over 100% capacity + Total temple capacity monitoring</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sanskrit-quote">
+                <p>"हर गेट की अपनी सीमा, मंदिर की अपनी क्षमता"</p>
+                <p class="translation">(Every gate has its limit, temple has its capacity)</p>
+            </div>
+        </div>
+
+        <!-- Capacity Distribution -->
+        <div class="capacity-distribution">
+            <h3>📊 Capacity Distribution & Protection</h3>
+            
+            <div class="distribution-grid">
+                <!-- Gate Capacity Limits -->
+                <div class="distribution-card">
+                    <h4>Gate-wise Capacity Limits:</h4>
+                    <div class="gate-capacities">
+                        <div class="gate-capacity"><span class="gate-name">Gate A:</span> <span class="capacity">200/200 👥</span> → Temple Contribution: 20%</div>
+                        <div class="gate-capacity"><span class="gate-name">Gate B:</span> <span class="capacity">300/300 👥</span> → Temple Contribution: 30%</div>
+                        <div class="gate-capacity"><span class="gate-name">Gate C:</span> <span class="capacity">250/250 👥</span> → Temple Contribution: 25%</div>
+                        <div class="gate-capacity"><span class="gate-name">Gate D:</span> <span class="capacity">350/350 👥</span> → Temple Contribution: 35%</div>
+                        <div class="gate-capacity"><span class="gate-name">Gate E:</span> <span class="capacity">300/300 👥</span> → Temple Contribution: 30%</div>
+                        <div class="gate-capacity"><span class="gate-name">Gate F:</span> <span class="capacity">400/400 👥</span> → Temple Contribution: 40%</div>
+                    </div>
+                </div>
+                
+                <!-- Temple Safety Features -->
+                <div class="distribution-card">
+                    <h4>Total Temple Safety:</h4>
+                    <ul class="safety-features">
+                        <li><i class="fas fa-shield-alt"></i> Individual Gate Protection: Each gate monitors its own capacity</li>
+                        <li><i class="fas fa-shield-alt"></i> Overall Temple Protection: Combined gates ensure total never exceeds 1000</li>
+                        <li><i class="fas fa-shield-alt"></i> Smart Distribution: Crowd automatically guided to less crowded gates</li>
+                        <li><i class="fas fa-shield-alt"></i> Double Safety: Both individual gates and total temple capacity protected</li>
+                    </ul>
+                    
+                    <div class="sanskrit-quote">
+                        <p>"सामूहिक सुरक्षा, व्यक्तिगत नियंत्रण"</p>
+                        <p class="translation">(Collective security, individual control)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="safety-message-section">
+    <div class="container">
+        <div class="safety-message-card">
+            <div class="safety-icon">
+                <i class="fas fa-hands-praying"></i>
+            </div>
+            <div class="safety-content">
+                <h2 class="safety-heading">“भीड़ से बढ़कर है सुरक्षा 🙏 – Safety Beyond Crowds”</h2>
+                <p class="safety-text">Overcrowding in temples can risk lives and delay darshan.<br>
+                Our AI-powered Gate Management System ensures smooth flow:</p>
+                
+                <div class="safety-features">
+                    <div class="safety-feature">
+                        <span class="feature-icon">🚪</span>
+                        <span class="feature-text">Threshold cross → Gate closes</span>
+                    </div>
+                    <div class="safety-feature">
+                        <span class="feature-icon">🔔</span>
+                        <span class="feature-text">Connected gates alerted instantly</span>
+                    </div>
+                    <div class="safety-feature">
+                        <span class="feature-icon">💡</span>
+                        <span class="feature-text">Simple, camera-linked & economical</span>
+                    </div>
+                </div>
+                
+                <div class="safety-quote">
+                    <p>👉 ‘जब भीड़ बढ़ती है, हमारा सिस्टम संभालता है।’</p>
+                    <p class="translation">(When the crowd grows, our system knows how to manage it.)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Real-Time Simulation Video Section -->
+  <div class="video-container">
+        <!-- Using a sample crowd video from Pexels -->
+        <video controls playsinline style="width: 100%; max-width: 800px; display: block; margin: 20px auto; border-radius: 10px;">
+    <source src="{{ url_for('static', filename='videos/crowd.mp4') }}" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+    </div>
+        </div>
+        
+        <div class="controls-panel">
+            <h2>Crowd Control Center</h2>
+            
+            <!-- Camera Configuration Modal -->
+            <div class="camera-modal" id="cameraModal" style="display: none;">
+                <div class="modal-content">
+                    <h3>Configure Camera for <span id="modalGateId"></span></h3>
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <label for="cameraSource">Camera Source:</label>
+                            <select id="cameraSource">
+                                <option value="0">Webcam 0 (Primary)</option>
+                                <option value="1">Webcam 1 (Secondary)</option>
+                                <option value="url">CCTV URL</option>
+                            </select>
+                        </div>
+                        <div class="input-group" id="urlInputGroup" style="display: none;">
+                            <label for="cctvUrl">CCTV URL:</label>
+                            <input type="text" id="cctvUrl" placeholder="rtsp:// or http://">
+                        </div>
+                        <div class="modal-buttons">
+                            <button id="connectCameraBtn">Connect</button>
+                            <button id="cancelCameraBtn">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile Registration Modal -->
+            <div class="camera-modal" id="mobileModal" style="display: none;">
+                <div class="modal-content">
+                    <h3>Register Mobile Camera for <span id="mobileGateId"></span></h3>
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <label for="mobileStreamUrl">Mobile Stream URL:</label>
+                            <input type="text" id="mobileStreamUrl" placeholder="http://192.168.x.x:8080/video">
+                            <small>Use apps like IP Webcam, DroidCam, or any RTSP stream</small>
+                        </div>
+                        <div class="input-group">
+                            <label for="mobileDeviceName">Device Name (optional):</label>
+                            <input type="text" id="mobileDeviceName" placeholder="Mobile Camera">
+                        </div>
+                        <div class="modal-buttons">
+                            <button id="registerMobileBtn">Register & Connect</button>
+                            <button id="cancelMobileBtn">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <h3>Camera Status</h3>
+                <div id="cameraStatus">
+                    <div class="status-item" data-gate="A">
+                        <span class="status-indicator status-disconnected"></span>
+                        Gate A: Disconnected
+                    </div>
+                    <div class="status-item" data-gate="B">
+                        <span class="status-indicator status-disconnected"></span>
+                        Gate B: Disconnected
+                    </div>
+                    <div class="status-item" data-gate="C">
+                        <span class="status-indicator status-disconnected"></span>
+                        Gate C: Disconnected
+                    </div>
+                    <div class="status-item" data-gate="D">
+                        <span class="status-indicator status-disconnected"></span>
+                        Gate D: Disconnected
+                    </div>
+                    <div class="status-item" data-gate="E">
+                        <span class="status-indicator status-disconnected"></span>
+                        Gate E: Disconnected
+                    </div>
+                    <div class="status-item" data-gate="F">
+                        <span class="status-indicator status-disconnected"></span>
+                        Gate F: Disconnected
+                    </div>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <h3>Live Counts</h3>
+                <div id="liveCounts">
+                    <div class="count-item" data-gate="A">Gate A: <span>0</span>/200</div>
+                    <div class="count-item" data-gate="B">Gate B: <span>0</span>/300</div>
+                    <div class="count-item" data-gate="C">Gate C: <span>0</span>/250</div>
+                    <div class="count-item" data-gate="D">Gate D: <span>0</span>/350</div>
+                    <div class="count-item" data-gate="E">Gate E: <span>0</span>/300</div>
+                    <div class="count-item" data-gate="F">Gate F: <span>0</span>/400</div>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <h3>Live Camera Feeds</h3>
+                <div id="cameraFeeds">
+                    <!-- Camera feeds will be inserted here -->
+                </div>
+            </div>
+            
+            <div class="alert-panel" id="alertPanel">
+                <div class="alert-title">CROWD ALERTS:</div>
+                <ul class="alert-list" id="alertList">
+                    <!-- Alerts will be added here dynamically -->
+                </ul>
+            </div>
+            
+            <div class="simulation-controls">
+                <button id="refreshBtn">Refresh Status</button>
+                <button id="resetBtn">Disconnect All</button>
+            </div>
+            
+            <div class="mobile-help">
+                <h3>Mobile Camera Setup Guide</h3>
+                <p>Common mobile camera app URL formats:</p>
+                
+                <div class="url-examples">
+                    <h4>IP Webcam (Android):</h4>
+                    <code>http://192.168.x.x:8080/video</code><br>
+                    <code>http://your-phone-ip:8080/video</code>
+                    
+                    <h4>DroidCam (Android/iOS):</h4>
+                    <code>http://192.168.x.x:4747/video</code><br>
+                    <code>http://your-phone-ip:4747/video</code>
+                    
+                    <h4>RTSP Streams (Security Cameras):</h4>
+                    <code>rtsp://username:password@camera-ip:554/stream</code><br>
+                    <code>rtsp://camera-ip:554/stream</code>
+                </div>
+                
+                <div class="troubleshooting">
+                    <h4>Troubleshooting Tips:</h4>
+                    <ol>
+                        <li>Ensure your phone and computer are on the same WiFi network</li>
+                        <li>Check that the camera app is running on your phone</li>
+                        <li>Verify the URL in your phone's camera app</li>
+                        <li>Try accessing the URL in a web browser first</li>
+                        <li>For RTSP streams, check camera documentation for correct URL format</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p><h3>Ujjain Kumbh Mela Crowd Management System Prototype | Developed By Team SAKSHAM</h3></p>
+
+         <p><h3>"Where Technology Meets Tradition: Ensuring Every Pilgrim's Safety"</h3></p>
+    </footer>
+   
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p>Processing, please wait...</p>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
